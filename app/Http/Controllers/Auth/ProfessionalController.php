@@ -28,6 +28,7 @@ class ProfessionalController extends Controller
         $professional->phone = $request->phone;
         $professional->city = $request->city;
         $professional->addresse = $request->addresse;
+        $professional->experience = $request->experience;
         $professional->password = Hash::make($request->password);
         $professional->code = rand(100000, 999999); // Verification code
         $professional->save();
@@ -90,6 +91,9 @@ class ProfessionalController extends Controller
             }
             $profilePath = $request->file('profile')->store('assets/profiles', 'public');
             $validated['profile'] = $profilePath;
+        }
+        if($validated['card_ID'] != null) {
+            $professional->is_verify = true;
         }
         $professional->update($validated);
         return response()->json([

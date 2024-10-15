@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Nunito Sans' ,sans-serif;
+}
+body {
+    width: 100%;
+    height: 100dvh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.email {
+    padding: 1.25em;
+    background-color: #F4F6FF;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2em;
+}
+.email_title {
+    font-size: 3.5em;
+    letter-spacing: .25em;
+    color: #FFDE4D;
+    /* margin-bottom: 1.9em; */
+}
+.email_group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    gap: 1.2em;
+}
+.group_text {
+    text-align: center;
+    font-size: 1.2em;
+    letter-spacing: .15em;
+}
+.email_code {
+    padding: .75em 1.2em;
+    background-color: #FFDE4D;
+    border-radius: .5em;
+    font-size: 1.25em;
+    color: #F4F6FF;
+    letter-spacing: .25em;
+}
+@media screen and (min-width: 48em){
+    .email {
+        background-color: #F4F6FF;
+        width: 70%;
+        height: 50%;
+    }
+    .email_group {
+        gap: 1.25em;
+    }
+    .group_text {
+        font-size: 1.25em;
+        letter-spacing: .20em;
+    }
+    .email_code {
+        padding: 1em 1.4em;
+        font-size: 1.5em;
+        letter-spacing: .5em;
+    }
+}
+@media screen and (min-width: 62em){
+    .email {
+        background-color: #F4F6FF;
+        width: 50%;
+        height: 100%;
+    }
+    .email_group {
+        gap: 1.25em;
+    }
+    .group_text {
+        font-size: 1.25em;
+        letter-spacing: .20em;
+    }
+    .email_code {
+        padding: 1em 1.4em;
+        font-size: 1.5em;
+        letter-spacing: .5em;
+    }
+}

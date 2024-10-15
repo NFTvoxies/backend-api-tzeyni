@@ -33,14 +33,14 @@ class UserController extends Controller
         // Create token
         $token = $user->createToken('user-token')->plainTextToken;
         Mail::to($user->email)->send(new VerificationMail($user->full_name,$user->code));
-        return response()->json(['status' => true, 'message' => 'Le code dans votre boite mail pour verifier t\'adresse email ','token'=>$token],200);
+        return response()->json(['status' => true, 'message' => 'Veuillez vérifier votre adresse e-mail en utilisant le code que nous avons envoyé à votre boîte de réception.','token'=>$token],200);
     }
 
     // Sign IN Function 
     public function login(LoginRequest $request){
         $user = User::where('email',$request->email)->first();
         if( !$user || !Hash::check($request->password,$user->password)){
-            return response()->json(['status' => false,'message'=>'Mote de passe est incorrect'],200);
+            return response()->json(['status' => false,'message'=>'Le mot de passe est incorrect.'],200);
         }
         $token = $user->createToken('user-token')->plainTextToken;
         return response()->json(['status' => true, 'message'=>'Bienvenue','token'=>$token],200);
@@ -51,19 +51,19 @@ class UserController extends Controller
         if(Auth::guard('user')->check()){
             $user = Auth::guard('user')->user();
             if( $user->code != $request->post('code') ){
-                return response()->json(['status' => false,'message' => 'Le code est incorrect'],401);
+                return response()->json(['status' => false,'message' => 'Le code que vous avez entré est incorrect.'],401);
             }
             $user->email_verified_at = now();
             $user->save();
-            return response()->json(['status' => true,'message' => 'Votre Addresse Email est Verifie','data'=>$user], 200);
+            return response()->json(['status' => true,'message' => 'Votre adresse e-mail a été vérifiée avec succès.','data'=>$user], 200);
         }
-        return response()->json(['message' => 'Utilisateur non authentifié'], 401);
+        return response()->json(['message' => 'Accès refusé : utilisateur non authentifié.'], 401);
     }
 
     // Get Info Of User 
     public function edit(){
         $user = Auth::guard('user')->user()->makeHidden(['code']);
-        return response()->json(['status' => true, 'message' => 'Voici Votre Profile', 'data' => $user],200);
+        return response()->json(['status' => true, 'message' => 'Voici les détails de votre profil.', 'data' => $user],200);
     }
 
     //Update profile Function 
@@ -77,7 +77,7 @@ class UserController extends Controller
         $user->addresse = $request->addresse;
         $user->save();
         return response()->json([
-            'message' => 'Profile mise à jour avec succès.',
+            'message' => 'Profil actualisé avec succès.',
             'data' => $user
         ], 200);
     }
@@ -85,7 +85,7 @@ class UserController extends Controller
     // Logout Function
     public function logout() {
         if (!Auth::guard('user')->check()) {
-            return response()->json(['message' => 'Utilisateur non authentifié'], 401);
+            return response()->json(['message' => 'Accès refusé : utilisateur non authentifié.'], 401);
         }
         $user = Auth::guard('user')->user();
         $user->currentAccessToken()->delete();

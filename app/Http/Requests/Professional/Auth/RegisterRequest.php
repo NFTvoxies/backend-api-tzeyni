@@ -28,6 +28,7 @@ class RegisterRequest extends FormRequest
             'phone' => 'required|string|unique:professionals,phone|max:100',
             'city' => 'required|string|max:120',
             'addresse' => 'required|string',
+            'experience' => 'nullable',
             'password' => 'required|string|confirmed|min:8'
         ];
     }

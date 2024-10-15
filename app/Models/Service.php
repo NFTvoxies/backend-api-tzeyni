@@ -20,6 +20,7 @@ class Service extends Model
         'is_visible',
         'is_promo',
         'promotion_price',
+        'professional_id'
     ];
 
     public function images(): MorphMany
@@ -29,7 +30,7 @@ class Service extends Model
 
     public function professional(): BelongsTo 
     {
-        return $this->belongsTo(Professional::class);
+        return $this->belongsTo(Professional::class,'professional_id');
     }
 
     public function reservations(): HasMany 

@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string('profile')->nullable();
             $table->string('card_ID')->nullable();
             $table->timestamp('email_verified_at')->nullable();
+            $table->boolean('is_verify')->default(false);
+            $table->integer('experience')->nullable();
             $table->string('password');
             $table->string('code',6)->nullable();
             $table->rememberToken();

@@ -1,13 +1,22 @@
 <?php
 
-use App\Http\Controllers\Auth\ProfessionalController;
-use App\Http\Controllers\Auth\UserController;
-use App\Http\Controllers\CommentController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\RouteController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\Auth\UserController;
+use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\Auth\ProfessionalController;
 use App\Http\Controllers\Professional\ProductController;
 use App\Http\Controllers\Professional\ServiceController;
-use App\Http\Controllers\ReservationController;
-use Illuminate\Support\Facades\Route;
+
+// Route for Both (Auth and Guest)
+Route::get('/home',[RouteController::class,'landing']);
+Route::get('/services',[RouteController::class,'services']);
+Route::post('/search',[RouteController::class,'search']);
+Route::get('/products',[RouteController::class,'products']);
+Route::get('/product/{id}',[RouteController::class,'product']);
+Route::get('/service/{id}',[RouteController::class,'service']);
 
 // User Authentication and Profile Routes
 Route::prefix('user')->group(function () {
@@ -72,7 +81,7 @@ Route::prefix('professional/products')->middleware(['auth:sanctum', 'auth:profes
 // Reservation Routes
 Route::prefix('professional/reservations')->middleware(['auth:sanctum', 'auth:professional'])->group(function () {
     Route::get('/', [ReservationController::class, 'list']);
-    Route::post('change', [ReservationController::class, 'change']);
+    Route::post('/change', [ReservationController::class, 'change']);
 });
 // Order Routes
 Route::prefix('professional/orders')->middleware(['auth:sanctum', 'auth:professional'])->group(function () {

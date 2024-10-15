@@ -24,7 +24,7 @@ class UpdateRequest extends FormRequest
     {
         return [
             'full_name' => 'required|string|max:200',
-            'gender' => 'required|string|in:Male,Female|max:100',
+            'gender' => 'required|string|in:Homme,Femme|max:100',
             'email' => [
                 'required',
                 'email',
@@ -39,6 +39,7 @@ class UpdateRequest extends FormRequest
             ],
             'city' => 'required|string|max:120',
             'addresse' => 'required|string',
+            'experience' => 'nullable',
             'profile' => 'nullable|file|mimes:png,jpg,jpeg',
             'card_ID' => 'nullable|string|max:100'
         ];
