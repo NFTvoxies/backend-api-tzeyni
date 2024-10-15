@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\Service;
 use App\Models\Professional;
+use App\Models\Reservation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RouteController extends Controller
 {
@@ -77,10 +80,22 @@ class RouteController extends Controller
             $query->select('id', 'full_name'); 
         }])
         ->with('images')->with('comments')->get();
+
         if( $product->isEmpty() ) {
             return response()->json(['message' => 'Désolé, nous n\'avons trouvé aucun produit correspondant à votre recherche. Veuillez essayer avec d\'autres critères.'], 404);
         }
-        return response()->json(['data' => $product],200);
+
+        $status = false;
+
+        if (!Auth::guard('user')->check()) {
+            return response()->json(['status' => $status,'data' => $product],200);
+        }
+
+        $order = Order::where('user_id',Auth::guard('user')->id())->where('product_id',$id)->where('status','livré')->first();
+        $status = $order ? true : false;
+
+        return response()->json(['status' => $status,'data' => $product],200);
+
     }
 
     public function service($id) {
@@ -93,6 +108,15 @@ class RouteController extends Controller
             return response()->json(['message' => 'Désolé, nous n\'avons trouvé aucun service correspondant à votre recherche. Veuillez essayer avec d\'autres critères.'], 404);
         }
 
-        return response()->json(['data' => $service],200);
+        $status = false;
+
+        if (!Auth::guard('user')->check()) {
+            return response()->json(['status' => $status,'data' => $service],200);
+        }
+
+        $reservation = Reservation::where('user_id',Auth::guard('user')->id())->where('service_id',$id)->where('status','livré')->first();
+        $status = $reservation ? true : false;
+
+        return response()->json(['status' => $status,'data' => $service],200);
     }
 }
