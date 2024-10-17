@@ -23,8 +23,8 @@ Route::get('/service/{id}',[RouteController::class,'service']);
 Route::prefix('user')->group(function () {
     Route::post('register', [UserController::class, 'register']);
     Route::post('login', [UserController::class, 'login']);
+    Route::post('verify-email', [UserController::class, 'verify']);
     Route::middleware(['auth:sanctum', 'auth:user'])->group(function () {
-        Route::post('verify-email', [UserController::class, 'verify']);
         Route::get('edit', [UserController::class, 'edit']);
         Route::post('update', [UserController::class, 'update']);
         Route::post('logout', [UserController::class, 'logout']);
@@ -51,10 +51,10 @@ Route::middleware(['auth:sanctum', 'auth:user'])->group(function () {
 Route::prefix('professional')->group(function () {
     Route::post('register', [ProfessionalController::class, 'register']);
     Route::post('login', [ProfessionalController::class, 'login']);
+    Route::post('verify-email', [ProfessionalController::class, 'verify']);
     Route::post('reset-password', [ProfessionalController::class, 'reset']);
 
     Route::middleware(['auth:sanctum', 'auth:professional'])->group(function () {
-        Route::post('verify-email', [ProfessionalController::class, 'verify']);
         Route::post('logout', [ProfessionalController::class, 'logout']);
         Route::post('update-profile', [ProfessionalController::class, 'update']);
         Route::get('/dashboard',[DashboardController::class,'index']);
@@ -91,7 +91,3 @@ Route::prefix('professional/orders')->middleware(['auth:sanctum', 'auth:professi
     Route::get('/', [OrderController::class, 'list']);
     Route::post('change', [OrderController::class, 'change']);
 });
-
-
-
-

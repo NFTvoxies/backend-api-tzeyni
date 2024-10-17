@@ -18,7 +18,7 @@ use App\Http\Requests\Professional\Auth\RegisterRequest;
 
 class ProfessionalController extends Controller
 {
-    //Sign Up Function 
+    //Sign Up Function
     public function register(RegisterRequest $request){
         // Create a new professional account
         $professional = new Professional();
@@ -38,7 +38,7 @@ class ProfessionalController extends Controller
         return response()->json(['status' => true, 'message' => 'Le code dans votre boite mail pour verifier t\'adresse email ','token'=>$token],200);
     }
 
-    // Sign In Function 
+    // Sign In Function
     public function login(LoginRequest $request){
         $professional = Professional::where('email',$request->email)->first();
         if($professional->email_verified_at == null){
@@ -47,25 +47,34 @@ class ProfessionalController extends Controller
         if(!$professional || !Hash::check($request->password,$professional->password)) {
             return response()->json(['status' => false,'message' => 'Le mot de passe est incorrect'], 401);
         }
-        $token = $professional->createToken('professional-token')->plainTextToken;
-        return response()->json(['status' => true,'message' => 'Bienvenue' , 'token' => $token], 200);
-    }
 
-    // Verify Email Function 
-    public function verify(CodeRequest $request) {
-        if(Auth::guard('professional')->check()){
-            $professional = Auth::guard('professional')->user();
-            if( $professional->code != $request->post('code') ){
-                return response()->json(['status' => false,'message' => 'Le code est incorrect'],401);
-            }
-            $professional->email_verified_at = now();
-            $professional->save();
-            return response()->json(['status' => true,'message' => 'Votre Addresse Email est Verifie','data'=>$professional], 200);
+         // Check if the email has been verified
+         if ($professional->email_verified_at === null) {
+            return response()->json(['status' => false, 'message' => 'Veuillez vérifier votre adresse e-mail avant de vous connecter.'], 401);
         }
-        return response()->json(['message' => 'Utilisateur non authentifié'], 401);       
+
+        $token = $professional->createToken('professional-token')->plainTextToken;
+        return response()->json(['status' => true,'message' => 'Bienvenue' , 'token' => $token, 'role'=> 'professional'], 200);
     }
 
-    // Reset Password Function 
+    // Verify Email Function
+    public function verify(CodeRequest $request)
+    {
+        $professional = Professional::where('email', $request->email)->first();
+
+        // Check if professional exists and the code is correct
+        if (!$professional || $professional->code != $request->post('code')) {
+            return response()->json(['status' => false, 'message' => 'Le code de vérification est incorrect'], 401);
+        }
+
+        // Mark email as verified
+        $professional->email_verified_at = now();
+        $professional->save();
+
+        return response()->json(['status' => true, 'message' => 'Votre adresse e-mail a été vérifiée.'], 200);
+    }
+
+    // Reset Password Function
     public function reset(ResetRequest $request){
         $professional = Professional::where('email',$request->post('email'))->first();
         $newPassword  = $professional->full_name.rand(1000,9999999);
@@ -74,14 +83,14 @@ class ProfessionalController extends Controller
         Mail::to($professional->email)->send(new ResetMail($newPassword,$professional->full_name));
         return response()->json(['status' => true,'message' => 'Votre nouveau mot de passe est dans ta boite mail'], 200);
     }
-    // Edit Profile Function 
+    // Edit Profile Function
     public function edit(){
         $professional = Auth::guard('professional')->user()->makeHidden(['code']);
         return response()->json(['status'=>true,'message'=>'Voici Votre Profile','data'=>$professional],200);
     }
-    
-    // Update Profile Function 
-    public function update(UpdateRequest $request){       
+
+    // Update Profile Function
+    public function update(UpdateRequest $request){
         $professional = Auth::guard('professional')->user()->makeHidden(['code']);
         $validated = $request->validated();
         // if the professional download new picture for profile
@@ -100,10 +109,10 @@ class ProfessionalController extends Controller
             'message' => 'Profile mise à jour avec succès.',
             'data' => $professional
         ], 200);
-        
+
     }
 
-    //Logout Function 
+    //Logout Function
     public function logout(){
         if (!Auth::guard('professional')->check()) {
             return response()->json(['message' => 'Utilisateur non authentifié'], 401);
