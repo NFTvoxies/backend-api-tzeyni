@@ -7,6 +7,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\Auth\ProfessionalController;
+use App\Http\Controllers\Professional\DashboardController;
 use App\Http\Controllers\Professional\ProductController;
 use App\Http\Controllers\Professional\ServiceController;
 
@@ -56,6 +57,8 @@ Route::prefix('professional')->group(function () {
         Route::post('verify-email', [ProfessionalController::class, 'verify']);
         Route::post('logout', [ProfessionalController::class, 'logout']);
         Route::post('update-profile', [ProfessionalController::class, 'update']);
+        Route::get('/dashboard',[DashboardController::class,'index']);
+
     });
 });
 // Service Routes
